@@ -16,7 +16,7 @@ DISPLAY=$DISPLAY_NUM cool-retro-term --fullscreen -e btop -t &
 
 ffmpeg \
   -f lavfi -i anullsrc -c:a pcm_u8 \
-  -f x11grab -video_size 640x480 -show_region 1 -draw_mouse 0 -i "$DISPLAY_NUM"+0,0 \
+  -f x11grab -video_size 640x480 -draw_mouse 0 -i "$DISPLAY_NUM"+0,0 \
   -framerate 20 -b:v 1500k -maxrate 1500k -bufsize 1500k \
   -c:v libx264 -preset veryslow \
   -f flv "rtmp://a.rtmp.youtube.com/live2/$STREAM_KEY"
