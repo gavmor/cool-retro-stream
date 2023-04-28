@@ -1,37 +1,27 @@
-#!/bin/bash
+#!/bin/bash -ex
 
-# Load configuration variables from config file
-source stream.config
+source "${BASH_SOURCE%/*}/stream.config"
+
+function cleanup {
+    echo "Cleaning up..."
+    pkill Xvfb cool-retro-term ffmpeg
+}
+
+trap cleanup EXIT
 
 # Start Xvfb in the background
-Xvfb $DISPLAY_NUM -screen 0 1280x720x24 &
-
-# Set the DISPLAY environment variable to use Xvfb
+Xvfb $DISPLAY_NUM -screen 0 640x480x24 -nolisten tcp -auth /dev/null &
 export DISPLAY=$DISPLAY_NUM
 
-# Start cool-retro-term in the background
-cool-retro-term &
-
-# Wait for a few seconds to ensure cool-retro-term is running
+# Start cool-retro-term in the background and wait for it to start
+cool-retro-term --fullscreen -e btop -t &
 sleep 5
 
-# Get the current timestamp for the log file name
-TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-
-# Start streaming the Xvfb buffer to YouTube using ffmpeg and log diagnostics
-ffmpeg -f x11grab \
--s 1280x720 \
--r 30 \
--i $DISPLAY_NUM \
--c:v libx264 \
--preset veryfast \
--b:v 2500k \
--maxrate 2500k \
--bufsize 5000k \
--vf "format=yuv420p" \
--g 50 \
--f flv "rtmp://a.rtmp.youtube.com/live2/$STREAM_KEY" \
--loglevel debug 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_${LOG_FILE}"
-
-# Clean up background processes when the script exits
-trap "killall cool-retro-term; killall Xvfb" EXIT
+ffmpeg -f lavfi -i anullsrc -c:a pcm_u8 \
+    -f x11grab \
+    -video_size 640x480 -show_region 1 -i "$DISPLAY"+0,0 -draw_mouse 0 \
+    -framerate 30 -b:v 1500k -maxrate 1500k -bufsize 1500k \
+    -c:v libx264 -preset veryslow -f flv \
+    "rtmp://a.rtmp.youtube.com/live2/$STREAM_KEY"
+    # ./logs/output.mp4
+    # -vf "format=yuv420p" -g 50 \
