@@ -16,6 +16,10 @@ function stream_command() {
     Xvfb $DISPLAY_NUM -screen 0 640x480x16 -nolisten tcp -auth /dev/null &
     export DISPLAY=$DISPLAY_NUM
     "$COMMAND" $OTHER_ARGS &
+    
+    # Grab COMMAND's xdotool window ID to try and shift the 
+    # window about a bit, because in at least one case
+    # the window comes up offset.
     wid=$(xdotool search --sync --onlyvisible --class $COMMAND)
     xdotool windowsize $wid 10 10
     xdotool windowmove $wid 100 100
