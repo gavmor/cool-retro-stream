@@ -11,9 +11,9 @@ function stream_command() {
     local COMMAND=$3
     local OTHER_ARGS=${@:4}   
 
-    # Start a virtual X server on the specified display, with a resolution of 640x480 and 16-bit color depth.
+    # Start a virtual X server on the specified display, with a resolution of 640x480 and 8-bit color depth.
     # Disable listening on TCP port and set authentication to /dev/null.
-    Xvfb $DISPLAY_NUM -screen 0 640x480x16 -nolisten tcp -auth /dev/null &
+    Xvfb $DISPLAY_NUM -screen 0 640x480x8 -nolisten tcp -auth /dev/null &
     DISPLAY=$DISPLAY_NUM "$COMMAND" $OTHER_ARGS &
     
 
