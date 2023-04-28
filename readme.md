@@ -1,9 +1,13 @@
 # `$ stream_command`
 
+```bash
+source "${BASH_SOURCE%/*}/lib.bash"
+stream_command :42 'abcd-efgh-ijkl' cool-retro-term -e tmux a
+```
+
 The `stream_command` Bash function is designed to create a virtual X display, run a command, and stream the output to YouTube. 
 
 ## Usage
-
 The function can be used by calling it with the required arguments:
 
 ```bash
