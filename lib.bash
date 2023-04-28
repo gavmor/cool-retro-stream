@@ -14,7 +14,13 @@ function stream_command() {
     # Start a virtual X server on the specified display, with a resolution of 640x480 and 16-bit color depth.
     # Disable listening on TCP port and set authentication to /dev/null.
     Xvfb $DISPLAY_NUM -screen 0 640x480x16 -nolisten tcp -auth /dev/null &
-    DISPLAY=$DISPLAY_NUM "$COMMAND" $OTHER_ARGS &
+    export DISPLAY=$DISPLAY_NUM
+    "$COMMAND" $OTHER_ARGS &
+    wid=$(xdotool search --sync --onlyvisible --class $COMMAND)
+    xdotool windowsize $wid 10 10
+    xdotool windowmove $wid 100 100
+    
+    # sleep 100
     
 
     

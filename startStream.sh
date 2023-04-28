@@ -12,4 +12,4 @@ function cleanup {
 
 trap cleanup EXIT
 
-stream_command $DISPLAY_NUM $STREAM_KEY cool-retro-term -e tmux a
+stream_command $DISPLAY_NUM $STREAM_KEY cool-retro-term -e watch fortune
