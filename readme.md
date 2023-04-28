@@ -1,4 +1,4 @@
-# `stream_command` Bash Function
+# `$ stream_command`
 
 The `stream_command` Bash function is designed to create a virtual X display, run a command, and stream the output to YouTube. 
 
